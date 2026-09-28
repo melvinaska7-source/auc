@@ -1,0 +1,82 @@
+prefix: "&x&6&8&F&B&3&C[Аукцион] &7»"
+
+command:
+  only-player: "{prefix} &fКоманда доступна только игроку."
+  no-permission: "{prefix} &fНедостаточно прав."
+  reloaded: "{prefix} &aКонфигурация и локализация обновлены."
+  sell-usage: "{prefix} &fИспользование: /ah sell <цена>"
+  search-usage: "{prefix} &fИспользование: /ah search <название>"
+  seller-usage: "{prefix} &fИспользование: /ah show <ник>"
+  usage: "{prefix} &fИспользование: &e{command}"
+
+error:
+  invalid-price: "{prefix} &fНекорректная цена."
+  price-positive: "{prefix} &fЦена должна быть больше 0."
+  price-too-low: "{prefix} &fМинимальная цена лота: &e{price}"
+  price-too-high: "{prefix} &fМаксимальная цена лота: &e{price}"
+  listing-limit: "{prefix} &fВы уже выставили максимальное количество лотов: &e{limit}"
+  item-required: "{prefix} &fВозьмите предмет в основную руку."
+  invalid-amount: "{prefix} &fНекорректное количество предметов."
+  serialization: "{prefix} &fНе удалось сохранить предмет."
+  player-not-found: "{prefix} &fИгрок не найден."
+  listing-unavailable: "{prefix} &fЭтот лот уже недоступен."
+  own-listing: "{prefix} &fНельзя купить собственный лот."
+  insufficient-funds: "{prefix} &fНедостаточно средств."
+  commission-funds: "{prefix} &fНедостаточно средств для комиссии: {commission}"
+  purchase-failed: "{prefix} &cОперация не выполнена. Средства возвращены."
+  auto-price-unavailable: "{prefix} &fНе удалось рассчитать цену: похожих активных лотов пока нет."
+  seller-empty: "{prefix} &fУ игрока &e@{seller} &fнет активных лотов."
+
+success:
+  listing-returned: "{prefix} &fЛот перенесён в раздел &e«Мои товары»&f."
+
+time:
+  empty: "0 ч 0 мин"
+  remaining: "{hours} ч {minutes} мин"
+
+notification:
+  listed: "{prefix} &fВы выставили на продажу &e{item} &fза {price}"
+  listed-with-commission: "{prefix} &fВы выставили на продажу &e{item} &fза {price} &8• &fКомиссия: {commission}"
+  collected: "{prefix} &fВы забрали &e{item}"
+  relisted: "{prefix} &fВы перевыставили &e{item} &fза {price}"
+  relisted-with-commission: "{prefix} &fВы перевыставили &e{item} &fза {price} &8• &fКомиссия: {commission}"
+  purchased: "{prefix} &fВы купили &e{item} &fза {price}"
+  seller-sale: "{prefix} &fИгрок &e@{buyer} &fкупил у вас &e{item} &fза {price}"
+  seller-sale-with-commission: "{prefix} &fИгрок &e@{buyer} &fкупил у вас &e{item} &fза {price} &8• &fКомиссия: {commission} &8• &fПолучено: {received}"
+  favorite-found: "{prefix} &fНайден подходящий лот &8• &x&F&F&8&7&0&2{item} &8• &7{time} &8[&x&F&F&8&7&0&2ОТКРЫТЬ&8]"
+  favorite-found-hover:
+    - "&x&D&5&B&F&F&F{item} &8× &f{amount}"
+    - "&8Цена за единицу &7• &x&F&F&8&7&0&2{unit-price}"
+    - "&8Полная стоимость &7• &f{total-price}"
+  favorite-found-more: "&8Ещё найдено: &f{amount}"
+  favorite-found-click: "&x&F&F&8&7&0&2Нажмите, чтобы открыть конкретный лот"
+  auto-buy-enabled: "{prefix} &x&F&F&8&7&0&2Автопокупка включена. &fЦена за единицу не превысит сохранённый предел."
+  auto-buy-disabled: "{prefix} &fАвтопокупка выключена."
+  auto-buy-no-price: "{prefix} &cАвтопокупку нельзя включить, пока на аукционе нет цены для этого предмета."
+  auto-buy-enter-price: "{prefix} &fВведите в чат максимальную цену для &e{item}&f. Для отмены напишите &cотмена&f."
+  auto-buy-price-set: "{prefix} &fАвтопокупка включена. Максимальная цена: &x&F&F&8&7&0&2{price}&f."
+  auto-buy-invalid-price: "{prefix} &cНекорректная цена. Автопокупка не изменена."
+  auto-buy-input-cancelled: "{prefix} &fНастройка автопокупки отменена."
+  auto-buy-purchased: "{prefix} &fАвтопокупка выполнена &8• &x&F&F&8&7&0&2{item} &8• &f{price}. &7Предмет сохранён в доставках."
+  auto-buy-failed: "{prefix} &fАвтопокупка не выполнена: недостаточно средств или валюта недоступна."
+  delivery-received: "{prefix} &fПолучено предметов из доставок: &e{amount}&a."
+  delivery-waiting: "{prefix} &fВ доставках осталось предметов: &f{amount}&e. Освободите инвентарь и используйте &f/ah delivery&e."
+  delivery-full: "{prefix} &fДля этого предмета недостаточно места в инвентаре."
+  favorite-added: "{prefix} &aУведомление добавлено."
+  favorite-removed: "{prefix} &fУведомление удалено."
+  favorite-duplicate: "{prefix} &eТакое уведомление уже существует."
+  favorite-invalid: "{prefix} &cПредмет или название указаны неверно."
+  favorite-cleared: "{prefix} &fУведомления этого аукциона удалены."
+  enchantment-conflict: "{prefix} &cЗачарование &f{enchantment} &cнесовместимо с уже выбранными чарами этого профиля."
+
+favorites:
+  type:
+    material: "&eМатериал"
+    name: "&eНазвание"
+    price: "&eПредмет и цена"
+  filter:
+    material: "&fМатериал: &e{value}"
+    name: "&fНазвание содержит: &e«{value}»"
+    price: "&fПредмет: &e{value} &8• &fМинимум: {price}"
+    enchantment: "&fПредмет: &e{value} &8• &d{enchantment} &8• &fМинимум: {price}"
+    no-price: "нет активных лотов"

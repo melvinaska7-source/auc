@@ -1,0 +1,114 @@
+plugins {
+    id 'java'
+    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id 'com.gradleup.shadow' version '8.3.9'
+}
+
+group = 'ru.privatenull'
+version = '1.2.0'
+
+base {
+    archivesName = 'pnMarket'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.rosewooddev.io/repository/public/' }
+}
+
+dependencies {
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
+    implementation("ru.privatenull:pnLibrary:1.0.0") {
+        // Runtime drivers are declared below so the embedded library remains reusable and lightweight.
+        transitive = false
+    }
+    implementation("org.bstats:bstats-bukkit:3.2.1")
+    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("redis.clients:jedis:7.5.3")
+    compileOnly ("com.github.MilkBowl:VaultAPI:1.7") {
+        exclude group: 'org.bukkit', module: 'bukkit'
+    }
+    compileOnly("org.black_ixx:playerpoints:3.3.5")
+    implementation 'org.mongodb:mongodb-driver-sync:4.11.1'
+    implementation 'org.xerial:sqlite-jdbc:3.46.1.3'
+    implementation 'com.mysql:mysql-connector-j:8.4.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.46.1.3'
+}
+
+tasks {
+    runServer {
+        minecraftVersion("1.16.5")
+    }
+
+    shadowJar {
+        archiveClassifier.set('')
+        archiveFileName.set("pnMarket-${project.version}.jar")
+        mergeServiceFiles()
+        relocate('ru.privatenull.pnlibrary', 'ru.privatenull.pnmarket.libs.pnlibrary')
+        relocate('org.bstats', 'ru.privatenull.pnmarket.libs.bstats')
+        relocate('com.zaxxer.hikari', 'ru.privatenull.pnmarket.libs.hikari')
+        relocate('redis.clients.jedis', 'ru.privatenull.pnmarket.libs.jedis')
+        relocate('org.apache.commons.pool2', 'ru.privatenull.pnmarket.libs.pool2')
+        manifest {
+            attributes(
+                    'Implementation-Title': project.name,
+                    'Implementation-Version': project.version,
+                    'Implementation-Vendor': 'privatenull'
+            )
+        }
+    }
+
+    jar {
+        archiveClassifier.set('plain')
+    }
+
+    build {
+        dependsOn shadowJar
+    }
+}
+
+tasks.register('releaseJar', Copy) {
+    dependsOn tasks.shadowJar
+    from tasks.shadowJar
+    into layout.projectDirectory.dir('release')
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}

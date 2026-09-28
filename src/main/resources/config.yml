@@ -1,0 +1,103 @@
+# ХРАНИЛИЩЕ
+storage:
+  type: sqlite # sqlite, mysql, mongo или redis; смена требует полного рестарта
+  sqlite:
+    file: "market.db"
+    connection-timeout-ms: 10000
+  mysql:
+    url: ""
+    host: localhost
+    port: 3306
+    database: minecraft
+    username: root
+    password: ""
+    parameters: "useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC"
+    pool-size: 10
+    connection-timeout-ms: 10000
+  mongo:
+    uri: "mongodb://localhost:27017"
+    database: minecraft
+    collection: auction
+  redis:
+    uri: "redis://localhost:6379/0"
+    namespace: "pnmarket"
+
+# ЛОКАЛИЗАЦИЯ ПРЕДМЕТОВ (ru_ru или en_us)
+localization:
+  locale: ru_ru
+
+# ВАЛЮТА (type: vault, playerpoints или excellent)
+currency:
+  default:
+    enabled: true
+    type: vault
+    format: "&a{amount}⛃"
+  donate:
+    enabled: true
+    type: playerpoints
+    format: "&d{amount} PP"
+
+# Только для type: excellent укажите ID валюты из ExcellentEconomy:
+# currency:
+#   default:
+#     type: excellent
+#     excellent:
+#       id: coins
+
+# ЦЕНЫ
+price:
+  mode: short # short (1K) или full (1000)
+  short:
+    decimals: 1 # Знаков после запятой
+    thousand: K
+    million: M
+    billion: B
+    trillion: T
+    quadrillion: Q
+  limits: # Мин/макс цена
+    default: { min: 1, max: "1M" }
+    donate: { min: 1, max: "1M" }
+  statistics:
+    enabled: true
+    permission: pnmarket.admin
+
+# КОМИССИЯ (% от полной цены лота)
+commission:
+  enabled: false
+  groups:
+    default: { listing: 2.0, sale: 5.0 }
+    vip: { listing: 1.0, sale: 3.0 }
+    premium: { listing: 0.0, sale: 1.0 }
+
+# ПРОДАЖА
+sell:
+  limits: # Лимит товаров
+    default: 3
+    gifest: 10
+  expiration: # Время жизни лота
+    default: 24h
+    groups:
+      default: 24h
+      vip: 48h
+      admin: 7d
+  auto: # Авто-цена (median или average)
+    permission: pnmarket.sell.auto
+    algorithm: median
+  kits:
+    max-slots: # Слоты по группам
+      default: 10
+      vip: 15
+      admin: 36
+    blocked-materials: # Запрещенные блоки
+      - BEDROCK
+      - BARRIER
+      - COMMAND_BLOCK
+      - CHAIN_COMMAND_BLOCK
+      - REPEATING_COMMAND_BLOCK
+      - STRUCTURE_BLOCK
+      - STRUCTURE_VOID
+      - JIGSAW
+
+# УВЕДОМЛЕНИЯ
+notifications:
+  enabled: true
