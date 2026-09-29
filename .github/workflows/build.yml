@@ -22,32 +22,12 @@ jobs:
       - name: Make Gradle executable
         run: chmod +x gradlew
 
-      # settings.gradle подключает ../pnLibrary через includeBuild.
-      # Коммит из README (6053231) слишком старый: в нём нет PluginBanner/PluginUpdateService,
-      # которые нужны GitHubUpdater. Свежий main требует Gradle 9. Поэтому перебираем
-      # теги pnLibrary от старых к новым и берём первый, с которым pnMarket компилируется.
-      - name: Find compatible pnLibrary
+      # pnMarket 1.2.0 собирается с pnLibrary на этом коммите (см. README, "Сборка").
+      # GitHubUpdater заменён заглушкой, поэтому новые классы pnLibrary не нужны.
+      - name: Checkout pnLibrary (pinned commit)
         run: |
           git clone https://github.com/pnFolder/pnLibrary.git ../pnLibrary
-          cd ../pnLibrary
-          REFS=$(git tag --sort=creatordate)
-          cd - > /dev/null
-          FOUND=""
-          for ref in $REFS; do
-            echo "::group::Try pnLibrary $ref"
-            git -C ../pnLibrary checkout -q "$ref"
-            if ./gradlew compileJava --no-daemon -q; then
-              FOUND="$ref"
-              echo "::endgroup::"
-              break
-            fi
-            echo "::endgroup::"
-          done
-          if [ -z "$FOUND" ]; then
-            echo "Не нашлось совместимого тега pnLibrary"
-            exit 1
-          fi
-          echo "Используем pnLibrary $FOUND"
+          git -C ../pnLibrary checkout 6053231cffd72fec870b72d6410b18f141741f51
 
       - name: Build
         run: ./gradlew clean build --no-daemon
