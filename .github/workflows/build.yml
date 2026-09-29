@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pnMarket
+        uses: actions/checkout@v4
+
+      # settings.gradle подключает ../pnLibrary через includeBuild.
+      # pnMarket 1.2.0 совместим только с этим коммитом (см. README, раздел "Сборка");
+      # текущая main pnLibrary имеет другой API и не соберётся.
+      - name: Checkout pnLibrary (pinned commit)
+        run: |
+          git clone https://github.com/pnFolder/pnLibrary.git ../pnLibrary
+          git -C ../pnLibrary checkout 6053231cffd72fec870b72d6410b18f141741f51
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew clean build --no-daemon
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnMarket
+          path: build/libs/pnMarket-1.2.0.jar
+          if-no-files-found: error
